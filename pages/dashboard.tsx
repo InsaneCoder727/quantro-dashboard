@@ -15,13 +15,17 @@ export default function Dashboard() {
     setError(null);
 
     try {
-      // Fetch top 20 coins from CoinGecko
-      const coinsResponse = await fetch(
-        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false'
-      );
+      // Fetch top 20 coins from CoinGecko with timeout
+      const coinsResponse = await Promise.race([
+        fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false'),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Request timeout')), 10000))
+      ]);
 
-      // Fetch Fear and Greed Index
-      const fngResponse = await fetch('https://api.alternative.me/fng/');
+      // Fetch Fear and Greed Index with timeout
+      const fngResponse = await Promise.race([
+        fetch('https://api.alternative.me/fng/'),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Request timeout')), 10000))
+      ]);
 
       if (!coinsResponse.ok) {
         throw new Error('Failed to fetch cryptocurrency data');
@@ -37,7 +41,8 @@ export default function Dashboard() {
       setCoins(coinsData);
       setFngData(fngData);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error('API Error:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred while fetching data');
     } finally {
       setIsLoading(false);
     }

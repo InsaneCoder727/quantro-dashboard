@@ -78,6 +78,14 @@ export default function Home() {
             <p className="text-gray-600 dark:text-gray-400">Optimized for all devices with dark mode support</p>
           </div>
         </div>
+
+        {/* Status indicator */}
+        <div className="mt-12 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+            Dashboard is live and ready to use
+          </p>
+        </div>
       </div>
     </Layout>
   );
