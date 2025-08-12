@@ -1,7 +1,18 @@
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Layout from '../components/Layout';
-import CoinTable from '../components/CoinTable';
 import { Coin, FNGResponse } from '../types';
+
+// Dynamically import CoinTable to prevent SSR issues
+const CoinTable = dynamic(() => import('../components/CoinTable'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex justify-center items-center py-12">
+      <div className="spinner"></div>
+      <span className="ml-3 text-gray-600 dark:text-gray-400">Loading table...</span>
+    </div>
+  ),
+});
 
 export default function Dashboard() {
   const [coins, setCoins] = useState<Coin[]>([]);
@@ -48,7 +59,7 @@ export default function Dashboard() {
     }
   };
 
-  // Load data on component mount
+  // Load data on component mount (client-side only)
   useEffect(() => {
     fetchData();
   }, []);
