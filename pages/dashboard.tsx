@@ -18,14 +18,14 @@ export default function Dashboard() {
       // Fetch top 20 coins from CoinGecko with timeout
       const coinsResponse = await Promise.race([
         fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false'),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Request timeout')), 10000))
-      ]);
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Request timeout')), 10000))
+      ]) as Response;
 
       // Fetch Fear and Greed Index with timeout
       const fngResponse = await Promise.race([
         fetch('https://api.alternative.me/fng/'),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Request timeout')), 10000))
-      ]);
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Request timeout')), 10000))
+      ]) as Response;
 
       if (!coinsResponse.ok) {
         throw new Error('Failed to fetch cryptocurrency data');
